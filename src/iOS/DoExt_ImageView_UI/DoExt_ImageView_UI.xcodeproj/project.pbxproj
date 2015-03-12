@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A4917C531A78942600FFB148 /* Do_ImageView_UIModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A4917C4E1A78942600FFB148 /* Do_ImageView_UIModel.m */; };
-		A4917C541A78942600FFB148 /* Do_ImageView_UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4917C501A78942600FFB148 /* Do_ImageView_UIView.m */; };
+		A44B7C2B1AA7015B0076C583 /* DoExt_ImageView_UIModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A44B7C281AA7015B0076C583 /* DoExt_ImageView_UIModel.m */; };
+		A44B7C2C1AA7015B0076C583 /* DoExt_ImageView_UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = A44B7C2A1AA7015B0076C583 /* DoExt_ImageView_UIView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,11 +25,11 @@
 
 /* Begin PBXFileReference section */
 		A433BB541A7785EF003AD107 /* DoExt_ImageView_UI.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DoExt_ImageView_UI.bundle; sourceTree = "<group>"; };
-		A4917C4D1A78942600FFB148 /* Do_ImageView_UIModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Do_ImageView_UIModel.h; sourceTree = "<group>"; };
-		A4917C4E1A78942600FFB148 /* Do_ImageView_UIModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Do_ImageView_UIModel.m; sourceTree = "<group>"; };
-		A4917C4F1A78942600FFB148 /* Do_ImageView_UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Do_ImageView_UIView.h; sourceTree = "<group>"; };
-		A4917C501A78942600FFB148 /* Do_ImageView_UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Do_ImageView_UIView.m; sourceTree = "<group>"; };
-		A4917C521A78942600FFB148 /* Do_ImageView_IView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Do_ImageView_IView.h; sourceTree = "<group>"; };
+		A44B7C261AA701500076C583 /* DoExt_ImageView_IView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoExt_ImageView_IView.h; sourceTree = "<group>"; };
+		A44B7C271AA7015B0076C583 /* DoExt_ImageView_UIModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoExt_ImageView_UIModel.h; sourceTree = "<group>"; };
+		A44B7C281AA7015B0076C583 /* DoExt_ImageView_UIModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoExt_ImageView_UIModel.m; sourceTree = "<group>"; };
+		A44B7C291AA7015B0076C583 /* DoExt_ImageView_UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoExt_ImageView_UIView.h; sourceTree = "<group>"; };
+		A44B7C2A1AA7015B0076C583 /* DoExt_ImageView_UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoExt_ImageView_UIView.m; sourceTree = "<group>"; };
 		A4D118B01A70D50F002F1A18 /* libDoExt_ImageView_UI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDoExt_ImageView_UI.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -47,10 +47,7 @@
 		A4917C4C1A78942600FFB148 /* ext_define */ = {
 			isa = PBXGroup;
 			children = (
-				A4917C4D1A78942600FFB148 /* Do_ImageView_UIModel.h */,
-				A4917C4E1A78942600FFB148 /* Do_ImageView_UIModel.m */,
-				A4917C4F1A78942600FFB148 /* Do_ImageView_UIView.h */,
-				A4917C501A78942600FFB148 /* Do_ImageView_UIView.m */,
+				A44B7C261AA701500076C583 /* DoExt_ImageView_IView.h */,
 			);
 			path = ext_define;
 			sourceTree = "<group>";
@@ -58,7 +55,10 @@
 		A4917C511A78942600FFB148 /* ext_implement */ = {
 			isa = PBXGroup;
 			children = (
-				A4917C521A78942600FFB148 /* Do_ImageView_IView.h */,
+				A44B7C271AA7015B0076C583 /* DoExt_ImageView_UIModel.h */,
+				A44B7C281AA7015B0076C583 /* DoExt_ImageView_UIModel.m */,
+				A44B7C291AA7015B0076C583 /* DoExt_ImageView_UIView.h */,
+				A44B7C2A1AA7015B0076C583 /* DoExt_ImageView_UIView.m */,
 			);
 			path = ext_implement;
 			sourceTree = "<group>";
@@ -137,8 +137,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4917C531A78942600FFB148 /* Do_ImageView_UIModel.m in Sources */,
-				A4917C541A78942600FFB148 /* Do_ImageView_UIView.m in Sources */,
+				A44B7C2C1AA7015B0076C583 /* DoExt_ImageView_UIView.m in Sources */,
+				A44B7C2B1AA7015B0076C583 /* DoExt_ImageView_UIModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

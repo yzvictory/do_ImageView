@@ -12,10 +12,9 @@
 #import "doIScriptEngine.h"
 #import "doInvokeResult.h"
 
-@protocol Do_ImageView_IView <NSObject>
+@protocol DoExt_ImageView_IView <NSObject>
 
 @required
-
 
 - (BOOL)InvokeSyncMethod:(NSString *)_methodName :(doJsonNode *)_dictParas :(id<doIScriptEngine>) _scriptEngine :(doInvokeResult *)_invokeResult;
 
@@ -26,10 +25,5 @@
 - (void)change_source: (NSString *)_source;
 - (void)change_scale: (NSString *)_scale;
 - (void)change_cache: (NSString *)_cache;
-
-
-
-
-
 
 @end

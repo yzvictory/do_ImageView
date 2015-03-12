@@ -1,6 +1,6 @@
-D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\bin\Debug\doUIViewDesign.ImageView.dll
-D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\bin\Debug\doUIViewDesign.ImageView.pdb
 D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\bin\Debug\doControlLib.dll
 D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\obj\Debug\do_ImageView.csprojResolveAssemblyReference.cache
-D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\obj\Debug\doUIViewDesign.ImageView.dll
-D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\obj\Debug\doUIViewDesign.ImageView.pdb
+D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\bin\Debug\doUIViewDesign.do_ImageView.dll
+D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\bin\Debug\doUIViewDesign.do_ImageView.pdb
+D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\obj\Debug\doUIViewDesign.do_ImageView.dll
+D:\MyWork\designer_comp\do_ImageView\src\designer\do_ImageView\do_ImageView\obj\Debug\doUIViewDesign.do_ImageView.pdb

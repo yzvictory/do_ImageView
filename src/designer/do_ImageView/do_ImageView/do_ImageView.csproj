@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>doUIViewDesign</RootNamespace>
-    <AssemblyName>doUIViewDesign.ImageView</AssemblyName>
+    <AssemblyName>doUIViewDesign.do_ImageView</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

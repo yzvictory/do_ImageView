@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>19400CC3-E69E-4D28-8CF6-FFDB61C00F47</string>
+	<key>IDESourceControlProjectName</key>
+	<string>DoExt_ImageView_UI</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B7486A661B244514D8BFB066FABCA7642DBF09A6</key>
+		<string>https://github.com/deviceone/do_ImageView.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>src/iOS/DoExt_ImageView_UI/DoExt_ImageView_UI.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B7486A661B244514D8BFB066FABCA7642DBF09A6</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/deviceone/do_ImageView.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B7486A661B244514D8BFB066FABCA7642DBF09A6</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B7486A661B244514D8BFB066FABCA7642DBF09A6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>do_ImageView</string>
+		</dict>
+	</array>
+</dict>
+</plist>

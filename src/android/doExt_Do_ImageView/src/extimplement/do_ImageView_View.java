@@ -25,8 +25,8 @@ import core.interfaces.DoIScriptEngine;
 import core.interfaces.DoIUIModuleView;
 import core.object.DoInvokeResult;
 import core.object.DoUIModule;
-import extdefine.Do_ImageView_IMethod;
-import extdefine.Do_ImageView_MAbstract;
+import extdefine.do_ImageView_IMethod;
+import extdefine.do_ImageView_MAbstract;
 
 /**
  * 自定义扩展UIView组件实现类，此类必须继承相应VIEW类，并实现DoIUIModuleView,Do_ImageView_IMethod接口；
@@ -35,16 +35,16 @@ import extdefine.Do_ImageView_MAbstract;
  * 参数解释：@_messageName字符串事件名称，@jsonResult传递事件参数对象； 获取DoInvokeResult对象方式new
  * DoInvokeResult(this.model.getUniqueKey());
  */
-public class Do_ImageView_View extends ImageView implements DoIUIModuleView, Do_ImageView_IMethod, OnClickListener {
+public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_ImageView_IMethod, OnClickListener {
 
 	/**
 	 * 每个UIview都会引用一个具体的model实例；
 	 */
-	private Do_ImageView_MAbstract model;
+	private do_ImageView_MAbstract model;
 	private ColorDrawable bgColorDrawable = new ColorDrawable(Color.TRANSPARENT);
 	private float radius;
 
-	public Do_ImageView_View(Context context) {
+	public do_ImageView_View(Context context) {
 		super(context);
 	}
 
@@ -119,7 +119,7 @@ public class Do_ImageView_View extends ImageView implements DoIUIModuleView, Do_
 	 */
 	@Override
 	public void loadView(DoUIModule _doUIModule) throws Exception {
-		this.model = (Do_ImageView_MAbstract) _doUIModule;
+		this.model = (do_ImageView_MAbstract) _doUIModule;
 		this.setOnClickListener(this);
 	}
 

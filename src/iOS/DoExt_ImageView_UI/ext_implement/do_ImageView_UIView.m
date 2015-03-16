@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 DoExt. All rights reserved.
 //
 
-#import "DoExt_ImageView_UIView.h"
+#import "do_ImageView_UIView.h"
 
 #import "doInvokeResult.h"
 #import "doIPage.h"
@@ -22,7 +22,7 @@
 #import "doIGlobal.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation DoExt_ImageView_UIView
+@implementation do_ImageView_UIView
 
 - (instancetype)init
 {

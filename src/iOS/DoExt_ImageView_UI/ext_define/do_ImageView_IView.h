@@ -12,7 +12,7 @@
 #import "doIScriptEngine.h"
 #import "doInvokeResult.h"
 
-@protocol DoExt_ImageView_IView <NSObject>
+@protocol do_ImageView_IView <NSObject>
 
 @required
 

@@ -6,10 +6,10 @@
 //  Copyright (c) 2015年 DoExt. All rights reserved.
 //
 
-#import "DoExt_ImageView_UIModel.h"
+#import "do_ImageView_UIModel.h"
 #import "doProperty.h"
 
-@implementation DoExt_ImageView_UIModel
+@implementation do_ImageView_UIModel
 
 #pragma mark - 注册属性（--属性定义--）
 /*

@@ -46,6 +46,8 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 
 	public do_ImageView_View(Context context) {
 		super(context);
+		this.setScaleType(ScaleType.FIT_XY);
+		this.setEnabled(false);
 	}
 
 	public void setRadius(float radius) {
@@ -106,7 +108,6 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 		}
 		return bitmap;
 	}
-
 
 	@Override
 	public void onClick(View v) {
@@ -203,7 +204,8 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 	 *                    _scriptEngine.callback(_callbackFuncName,
 	 *                    _invokeResult);
 	 *                    参数解释：@_callbackFuncName回调函数名，@_invokeResult传递回调函数参数对象；
-	 *                    获取DoInvokeResult对象方式new DoInvokeResult(this.model.getUniqueKey());
+	 *                    获取DoInvokeResult对象方式new
+	 *                    DoInvokeResult(this.model.getUniqueKey());
 	 */
 	@Override
 	public boolean invokeAsyncMethod(String _methodName, DoJsonNode _dictParas, DoIScriptEngine _scriptEngine, String _callbackFuncName) {

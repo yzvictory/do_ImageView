@@ -7,6 +7,6 @@
 //
 #import "doUIModule.h"
 
-@interface DoExt_ImageView_UIModel : doUIModule
+@interface do_ImageView_UIModel : doUIModule
 
 @end

@@ -53,14 +53,14 @@ namespace do_ImageView.extimplement
 
         void image_View_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            doInvokeResult _invokeResult = this.model.CurrentPage.ScriptEngine.CreateInvokeResult(this.model.UniqueKey);
+            doInvokeResult _invokeResult = new doInvokeResult(this.model.UniqueKey);
             this.model.EventCenter.FireEvent("touchup", _invokeResult);
             this.model.EventCenter.FireEvent("touch", _invokeResult);
         }
 
         void image_View_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            doInvokeResult _invokeResult = this.model.CurrentPage.ScriptEngine.CreateInvokeResult(this.model.UniqueKey);
+            doInvokeResult _invokeResult = new doInvokeResult(this.model.UniqueKey);
             this.model.EventCenter.FireEvent("touchdown", _invokeResult);
         }
 

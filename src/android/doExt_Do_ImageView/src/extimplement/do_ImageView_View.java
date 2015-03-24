@@ -67,7 +67,7 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
-		Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+		Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.RGB_565);
 		Canvas newCanvas = new Canvas(newBitmap);
 		newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
 		if (getDrawable() != null) {
@@ -107,7 +107,7 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 	
 	private Bitmap createCenterTypeScaledBitmap(Bitmap bitmap, int cw, int ch){
 		Bitmap centerScaleBitmap = Bitmap.createBitmap(getWidth(), getHeight(),
-				Bitmap.Config.ARGB_8888);
+				Bitmap.Config.RGB_565);
 		Canvas canvas = new Canvas(centerScaleBitmap);
 		Rect src = new Rect();
 		int bx = (cw - getWidth()) / 2;
@@ -193,7 +193,9 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 				} else {
 					String path = DoIOHelper.getLocalFileFullPath(this.model.getCurrentPage().getCurrentApp(), source);
 					Bitmap bitmap = DoImageLoadHelper.getInstance().loadLocal(path);
-					setImageBitmap(bitmap);
+					if(bitmap != null){
+						setImageBitmap(bitmap);
+					}
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);

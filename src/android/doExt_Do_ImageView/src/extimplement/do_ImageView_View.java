@@ -99,8 +99,29 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 		// 计算Image在屏幕上实际绘制的宽高
 		int cw = (int) (dw * sx);
 		int ch = (int) (dh * sy);
+		if(cw > getWidth() || ch > getHeight()){
+			return createCenterTypeScaledBitmap(imageBitmap, cw, ch);
+		}
 		return Bitmap.createScaledBitmap(imageBitmap, cw, ch, true);
 	}
+	
+	private Bitmap createCenterTypeScaledBitmap(Bitmap bitmap, int cw, int ch){
+		Bitmap centerScaleBitmap = Bitmap.createBitmap(getWidth(), getHeight(),
+				Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(centerScaleBitmap);
+		Rect src = new Rect();
+		int bx = (cw - getWidth()) / 2;
+		int by = (ch - getHeight()) / 2;
+		bx = bx < 0 ? 0 : bx;
+		by = by < 0 ? 0 : by;
+		src.left = bx;
+		src.top = by;
+		src.right = bx + getWidth();
+		src.bottom = by + getHeight();
+		canvas.drawBitmap(bitmap, src, 
+				new Rect(0, 0, getWidth(), getHeight()), new Paint());
+		return centerScaleBitmap;
+	} 
 
 	private Bitmap createRadiusBitmap(Bitmap bitmap) {
 		if (this.radius > 0f) {
@@ -201,11 +222,9 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 	 * @_dictParas 参数（K,V）
 	 * @_scriptEngine 当前page JS上下文环境
 	 * @_callbackFuncName 回调函数名 #如何执行异步方法回调？可以通过如下方法：
-	 *                    _scriptEngine.callback(_callbackFuncName,
-	 *                    _invokeResult);
-	 *                    参数解释：@_callbackFuncName回调函数名，@_invokeResult传递回调函数参数对象；
-	 *                    获取DoInvokeResult对象方式new
-	 *                    DoInvokeResult(this.model.getUniqueKey());
+	 * _scriptEngine.callback(_callbackFuncName,_invokeResult);
+	 * 参数解释：@_callbackFuncName回调函数名，@_invokeResult传递回调函数参数对象；
+	 * 获取DoInvokeResult对象方式new DoInvokeResult(this.model.getUniqueKey());
 	 */
 	@Override
 	public boolean invokeAsyncMethod(String _methodName, DoJsonNode _dictParas, DoIScriptEngine _scriptEngine, String _callbackFuncName) {

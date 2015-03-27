@@ -187,7 +187,9 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 					DoImageLoadHelper.getInstance().loadURL(source, cache, new OnPostExecuteListener() {
 						@Override
 						public void onPostExecute(Bitmap bitmap) {
-							setImageBitmap(bitmap);
+							if(bitmap !=null) {
+								setImageBitmap(bitmap);
+							}
 						}
 					});
 				} else {

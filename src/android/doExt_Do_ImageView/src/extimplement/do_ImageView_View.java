@@ -48,6 +48,7 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 		super(context);
 		this.setScaleType(ScaleType.FIT_XY);
 		this.setEnabled(false);
+		this.setFocusable(false);
 	}
 
 	public void setRadius(float radius) {
@@ -56,6 +57,14 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 
 	private float getRadius() {
 		return (float) (this.radius * Math.min(this.model.getXZoom(), this.model.getYZoom()));
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		if (enabled) {
+			this.setOnClickListener(this);
+		}
+		super.setEnabled(enabled);
 	}
 
 	@Override
@@ -142,7 +151,6 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 	@Override
 	public void loadView(DoUIModule _doUIModule) throws Exception {
 		this.model = (do_ImageView_MAbstract) _doUIModule;
-		this.setOnClickListener(this);
 	}
 
 	/**

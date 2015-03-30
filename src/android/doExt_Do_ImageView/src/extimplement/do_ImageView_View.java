@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import core.DoServiceContainer;
 import core.helper.DoIOHelper;
 import core.helper.DoImageHandleHelper;
 import core.helper.DoImageLoadHelper;
@@ -208,7 +209,7 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 					}
 				}
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				DoServiceContainer.getLogEngine().writeError("do_ImageView_View", e);
 			}
 		}
 	}

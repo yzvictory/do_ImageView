@@ -76,22 +76,26 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
-		Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.RGB_565);
-		Canvas newCanvas = new Canvas(newBitmap);
-		newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
-		if (getDrawable() != null) {
-			Bitmap imageBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
-			if (imageBitmap != null) {
-				Bitmap scaledBitmap = getScaledBitmap(imageBitmap);
-				float left = Math.abs(bgBitmap.getWidth() - scaledBitmap.getWidth()) / 2;
-				float top = Math.abs(bgBitmap.getHeight() - scaledBitmap.getHeight()) / 2;
-				newCanvas.drawBitmap(scaledBitmap, left, top, new Paint());
+		if (this.radius > 0f) {
+			Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
+			Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.RGB_565);
+			Canvas newCanvas = new Canvas(newBitmap);
+			newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
+			if (getDrawable() != null) {
+				Bitmap imageBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
+				if (imageBitmap != null) {
+					Bitmap scaledBitmap = getScaledBitmap(imageBitmap);
+					float left = Math.abs(bgBitmap.getWidth() - scaledBitmap.getWidth()) / 2;
+					float top = Math.abs(bgBitmap.getHeight() - scaledBitmap.getHeight()) / 2;
+					newCanvas.drawBitmap(scaledBitmap, left, top, new Paint());
+				}
 			}
+			newCanvas.save();
+			newCanvas.restore();
+			canvas.drawBitmap(DoImageHandleHelper.createRoundBitmap(newBitmap, getRadius()), 0, 0, new Paint());
+			return;
 		}
-		newCanvas.save();
-		newCanvas.restore();
-		canvas.drawBitmap(createRadiusBitmap(newBitmap), 0, 0, new Paint());
+		super.onDraw(canvas);
 	}
 
 	private Bitmap getScaledBitmap(Bitmap imageBitmap) {
@@ -132,13 +136,6 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 				new Rect(0, 0, getWidth(), getHeight()), new Paint());
 		return centerScaleBitmap;
 	} 
-
-	private Bitmap createRadiusBitmap(Bitmap bitmap) {
-		if (this.radius > 0f) {
-			return DoImageHandleHelper.createRoundBitmap(bitmap, getRadius());
-		}
-		return bitmap;
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -188,14 +185,14 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 				this.setScaleType(ScaleType.FIT_XY);
 			}
 		}
-		if (_changedValues.containsKey("source") || _changedValues.containsKey("cache")) {
-			String cache = _changedValues.get("cache");
+		if (_changedValues.containsKey("source")) {
+			String cache = getCacheValue(_changedValues);
 			String source = _changedValues.get("source");
 			try {
 				if (null != DoIOHelper.getHttpUrlPath(source)) {
 					DoImageLoadHelper.getInstance().loadURL(source, cache, new OnPostExecuteListener() {
 						@Override
-						public void onPostExecute(Bitmap bitmap) {
+						public void onResultExecute(Bitmap bitmap) {
 							if(bitmap !=null) {
 								setImageBitmap(bitmap);
 							}
@@ -212,6 +209,22 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 				DoServiceContainer.getLogEngine().writeError("do_ImageView_View", e);
 			}
 		}
+	}
+	
+	private String getCacheValue(Map<String, String> _changedValues){
+		String cache = _changedValues.get("cache");
+		if (cache == null) {
+			try {
+				cache = this.model.getPropertyValue("cache");
+				if(cache == null || "".equals(cache)){
+					cache = "never";
+				}
+			} catch (Exception e) {
+				cache = "never";
+				e.printStackTrace();
+			}
+		}
+		return cache;
 	}
 
 	/**

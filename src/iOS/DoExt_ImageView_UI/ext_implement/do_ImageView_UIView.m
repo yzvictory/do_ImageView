@@ -23,13 +23,18 @@
 #import <CommonCrypto/CommonDigest.h>
 
 @implementation do_ImageView_UIView
+{
+    BOOL isEnabled;
+}
 
 - (instancetype)init
 {
     if (self = [super init])
     {
         self.clipsToBounds = YES;
-        self.userInteractionEnabled = false;
+        self.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick)];
+        [self addGestureRecognizer:tap];
     }
     return self;
 }
@@ -37,14 +42,13 @@
 //引用Model对象
 - (void) LoadView: (doUIModule *) _doUIModule
 {
-   model = (typeof(model)) _doUIModule;
-    
+    model = (typeof(model)) _doUIModule;
+    self.cacheType = [model GetProperty:@"cache"].DefaultValue;
 }
 //销毁所有的全局对象
 - (void) OnDispose
 {
-    model = nil;
-    //自定义的全局属性
+    
 }
 //实现布局
 - (void) OnRedraw
@@ -91,43 +95,37 @@
 
 - (void)change_enabled: (NSString *)_enabled
 {
-    if (_enabled == nil || _enabled.length <= 0)
-    {
-        _enabled = [model GetProperty:@"enabled"].DefaultValue;
-    }
-    if ( _enabled != nil  && ([_enabled isEqualToString:@"true"] ||[_enabled isEqualToString:@"1"]))
-    {
-        self.userInteractionEnabled = YES;
-    }
-    else
-    {
-        self.userInteractionEnabled = NO;
-    }
+    BOOL defule = YES;
+    if([[model GetProperty:@"enabled"].DefaultValue isEqualToString:@"false"])
+        defule = NO;
+    isEnabled = [[doTextHelper Instance] StrToBool:_enabled :defule];
 }
 
 - (void)change_source: (NSString *)_source
 {
     if (_source != nil && _source.length > 0)
     {
-        
         if ([_source hasPrefix:@"http"])  //如果是由网络请求
         {
             if ([self.cacheType isEqualToString:@"always"])
             {
-                self.image = [self getImageFromCache:_source];
-                if (self.image == nil)
-                {
-                    [self getImgFromNetworkAndCached:_source];
-                }
+                UIImage *image = [self getImageFromCache:_source];
+                if(image)
+                    self.image = image;
+                else
+                    [self getImageFromNetwork:_source cache:YES show:YES];
             }
-            else if ([self.cacheType isEqualToString:@"temporay"])
+            else if ([self.cacheType isEqualToString:@"temporary"])
             {
-                self.image = [self getImageFromCache:_source];
-                [self getImgFromNetworkAndCached:_source];
+                UIImage *image = [self getImageFromCache:_source];
+                if(image)
+                    self.image = image;
+                else
+                    [self getImageFromNetwork:_source cache:YES show:NO];
             }
             else
             {
-                self.image = [self getImageFromNetwork:_source];
+                [self getImageFromNetwork:_source cache:NO show:YES];
             }
         }
         else  //如果是本地文件
@@ -178,77 +176,61 @@
 }
 
 #pragma mark -
-#pragma mark - override UIView method
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [super touchesBegan:touches withEvent:event];
-    doInvokeResult* _invokeResult = [[doInvokeResult alloc]init:model.UniqueKey];
-    [model.EventCenter FireEvent:@"touch":_invokeResult];
-}
-
-#pragma mark -
 #pragma mark - private
-- (UIImage *)getImageFromNetwork :(NSString *)path
+- (void)getImageFromNetwork :(NSString *)path cache:(BOOL)_cache show:(BOOL)_show
 {
-    __block UIImage *img;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *str = [path stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-        NSData *dataImg = [NSData dataWithContentsOfURL:[NSURL URLWithString:str]];
-        img = [UIImage imageWithData:dataImg];
+        //NSString *str = [path stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        NSData *dataImg = [NSData dataWithContentsOfURL:[NSURL URLWithString:path]];
+        UIImage *img = [UIImage imageWithData:dataImg];
         if (img) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.image = img;
+                if(_show)
+                    self.image = img;
+                if(_cache)
+                    [self writeDataToCache:path];
             });
         }
     });
-    return img;
 }
 
-- (void)getImgFromNetworkAndCached :(NSString *)path
+- (void)writeDataToCache:(NSString *)path
 {
-    self.image = [self getImageFromNetwork:path];
     NSString *_dataRoot = [NSString stringWithFormat:@"%@/main/%@/data", [doServiceContainer Instance].Global.DataRootPath, @"app"];
-    
     //不存在缓存文件夹，则创建缓存文件夹
     NSString *cachePath = [NSString stringWithFormat:@"%@/sys/imagecache",_dataRoot];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:cachePath ])
-    {
         [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
     NSString *strName = [[doTextHelper Instance] MD5:path];
     NSString *filePath = [NSString stringWithFormat:@"%@/%@.png",cachePath,strName];
-    
     NSData *dataImg;
-    if (UIImagePNGRepresentation(self.image) == nil) {
-        
+    if (UIImagePNGRepresentation(self.image) == nil)
         dataImg = UIImageJPEGRepresentation(self.image, 1);
-        
-    } else {
-        
+    else
         dataImg = UIImagePNGRepresentation(self.image);
-    }
     [[NSFileManager defaultManager] createFileAtPath:filePath contents:dataImg attributes:nil];
 }
 
 - (UIImage *)getImageFromCache :(NSString *)path
 {
     NSString *_dataRoot = [NSString stringWithFormat:@"%@/main/%@/data", [doServiceContainer Instance].Global.DataRootPath ,@"app"];
-    
-    //不存在缓存文件夹，则创建缓存文件夹
     NSString *cachePath = [NSString stringWithFormat:@"%@/sys/imagecache",_dataRoot];
     NSString *strName = [[doTextHelper Instance] MD5:path];
     NSString *filePath = [NSString stringWithFormat:@"%@/%@.png",cachePath,strName];
     //在本地cache中找到图片
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-    {
         return [UIImage imageWithContentsOfFile:filePath];
-    }
     else
-    {
         return nil;
-    }
+}
+
+#pragma mark - override UIView method
+- (void)tapClick
+{
+    if(!isEnabled) return;
+    doInvokeResult* _invokeResult = [[doInvokeResult alloc]init:model.UniqueKey];
+    [model.EventCenter FireEvent:@"touch":_invokeResult];
 }
 
 #pragma mark - doIUIModuleView协议方法（必须）<大部分情况不需修改>
@@ -276,6 +258,16 @@
 {
     //获取model对象
     return model;
+}
+#pragma mark - 重写该方法，动态选择事件的施行或无效
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *view = [super hitTest:point withEvent:event];
+    //这里的BOOL值，可以设置为int的标记。从model里获取。
+    if(model.EventCenter.dictEventCollection.count <= 0)
+        if(view == self)
+            view = nil;
+    return view;
 }
 
 @end

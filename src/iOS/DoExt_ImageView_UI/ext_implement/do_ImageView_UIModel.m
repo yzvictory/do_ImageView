@@ -13,7 +13,7 @@
 
 #pragma mark - 注册属性（--属性定义--）
 /*
-[self RegistProperty:[[doProperty alloc]init:@"属性名" :属性类型 :@"默认值" : BOOL:是否支持代码修改属性]];
+ [self RegistProperty:[[doProperty alloc]init:@"属性名" :属性类型 :@"默认值" : BOOL:是否支持代码修改属性]];
  */
 -(void)OnInit
 {
@@ -28,7 +28,7 @@
     [self RegistProperty:[[doProperty alloc]init:@"enabled" :Bool :@"false" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"source" :String :@"" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"scale" :String :@"" :NO]];
-    [self RegistProperty:[[doProperty alloc]init:@"cache" :Number :@"0" :NO]];
+    [self RegistProperty:[[doProperty alloc]init:@"cache" :String :@"never" :NO]];
 }
 
 @end

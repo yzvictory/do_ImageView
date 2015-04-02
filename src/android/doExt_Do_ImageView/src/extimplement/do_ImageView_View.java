@@ -76,26 +76,26 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		if (this.radius > 0f) {
-			Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
-			Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.RGB_565);
-			Canvas newCanvas = new Canvas(newBitmap);
-			newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
-			if (getDrawable() != null) {
-				Bitmap imageBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
-				if (imageBitmap != null) {
-					Bitmap scaledBitmap = getScaledBitmap(imageBitmap);
-					float left = Math.abs(bgBitmap.getWidth() - scaledBitmap.getWidth()) / 2;
-					float top = Math.abs(bgBitmap.getHeight() - scaledBitmap.getHeight()) / 2;
-					newCanvas.drawBitmap(scaledBitmap, left, top, new Paint());
-				}
+		Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
+		Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.RGB_565);
+		Canvas newCanvas = new Canvas(newBitmap);
+		newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
+		if (getDrawable() != null) {
+			Bitmap imageBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
+			if (imageBitmap != null) {
+				Bitmap scaledBitmap = getScaledBitmap(imageBitmap);
+				float left = Math.abs(bgBitmap.getWidth() - scaledBitmap.getWidth()) / 2;
+				float top = Math.abs(bgBitmap.getHeight() - scaledBitmap.getHeight()) / 2;
+				newCanvas.drawBitmap(scaledBitmap, left, top, new Paint());
 			}
-			newCanvas.save();
-			newCanvas.restore();
+		}
+		newCanvas.save();
+		newCanvas.restore();
+		if (this.radius > 0f) {
 			canvas.drawBitmap(DoImageHandleHelper.createRoundBitmap(newBitmap, getRadius()), 0, 0, new Paint());
 			return;
 		}
-		super.onDraw(canvas);
+		canvas.drawBitmap(newBitmap, 0, 0, new Paint());
 	}
 
 	private Bitmap getScaledBitmap(Bitmap imageBitmap) {

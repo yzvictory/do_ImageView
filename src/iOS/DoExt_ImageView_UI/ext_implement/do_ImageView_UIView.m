@@ -228,7 +228,6 @@
 #pragma mark - override UIView method
 - (void)tapClick
 {
-    if(!isEnabled) return;
     doInvokeResult* _invokeResult = [[doInvokeResult alloc]init:model.UniqueKey];
     [model.EventCenter FireEvent:@"touch":_invokeResult];
 }
@@ -264,7 +263,7 @@
 {
     UIView *view = [super hitTest:point withEvent:event];
     //这里的BOOL值，可以设置为int的标记。从model里获取。
-    if([model.EventCenter getEventCount:@"touch"] <= 0)
+    if([model.EventCenter getEventCount:@"touch"] <= 0 || isEnabled == NO)
         if(view == self)
             view = nil;
     return view;

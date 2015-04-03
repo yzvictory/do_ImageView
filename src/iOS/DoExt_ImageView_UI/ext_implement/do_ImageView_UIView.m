@@ -27,22 +27,15 @@
     BOOL isEnabled;
 }
 
-- (instancetype)init
-{
-    if (self = [super init])
-    {
-        self.clipsToBounds = YES;
-        self.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick)];
-        [self addGestureRecognizer:tap];
-    }
-    return self;
-}
 #pragma mark - doIUIModuleView协议方法（必须）
 //引用Model对象
 - (void) LoadView: (doUIModule *) _doUIModule
 {
     model = (typeof(model)) _doUIModule;
+    self.clipsToBounds = YES;
+    self.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick)];
+    [self addGestureRecognizer:tap];
     self.cacheType = [model GetProperty:@"cache"].DefaultValue;
 }
 //销毁所有的全局对象

@@ -77,7 +77,7 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
-		Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.RGB_565);
+		Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.ARGB_8888);
 		Canvas newCanvas = new Canvas(newBitmap);
 		newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
 		if (getDrawable() != null) {

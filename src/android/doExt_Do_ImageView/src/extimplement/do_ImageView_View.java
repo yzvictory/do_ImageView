@@ -76,26 +76,30 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
-		Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-		Canvas newCanvas = new Canvas(newBitmap);
-		newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
-		if (getDrawable() != null) {
-			Bitmap imageBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
-			if (imageBitmap != null) {
-				Bitmap scaledBitmap = getScaledBitmap(imageBitmap);
-				float left = Math.abs(bgBitmap.getWidth() - scaledBitmap.getWidth()) / 2;
-				float top = Math.abs(bgBitmap.getHeight() - scaledBitmap.getHeight()) / 2;
-				newCanvas.drawBitmap(scaledBitmap, left, top, new Paint());
+		if(bgColorDrawable.getColor() == 0 && this.radius == 0f){
+			super.onDraw(canvas);
+		}else{
+			Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
+			Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+			Canvas newCanvas = new Canvas(newBitmap);
+			newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
+			if (getDrawable() != null) {
+				Bitmap imageBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
+				if (imageBitmap != null) {
+					Bitmap scaledBitmap = getScaledBitmap(imageBitmap);
+					float left = Math.abs(bgBitmap.getWidth() - scaledBitmap.getWidth()) / 2;
+					float top = Math.abs(bgBitmap.getHeight() - scaledBitmap.getHeight()) / 2;
+					newCanvas.drawBitmap(scaledBitmap, left, top, new Paint());
+				}
 			}
+			newCanvas.save();
+			newCanvas.restore();
+			if (this.radius > 0f) {
+				canvas.drawBitmap(DoImageHandleHelper.createRoundBitmap(newBitmap, getRadius()), 0, 0, new Paint());
+				return;
+			}
+			canvas.drawBitmap(newBitmap, 0, 0, new Paint());
 		}
-		newCanvas.save();
-		newCanvas.restore();
-		if (this.radius > 0f) {
-			canvas.drawBitmap(DoImageHandleHelper.createRoundBitmap(newBitmap, getRadius()), 0, 0, new Paint());
-			return;
-		}
-		canvas.drawBitmap(newBitmap, 0, 0, new Paint());
 	}
 
 	private Bitmap getScaledBitmap(Bitmap imageBitmap) {

@@ -212,19 +212,19 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 	}
 	
 	private String getCacheValue(Map<String, String> _changedValues){
-		String cache = _changedValues.get("cache");
-		if (cache == null) {
+		String cacheType = _changedValues.get("cacheType");
+		if (cacheType == null) {
 			try {
-				cache = this.model.getPropertyValue("cache");
-				if(cache == null || "".equals(cache)){
-					cache = "never";
+				cacheType = this.model.getPropertyValue("cacheType");
+				if(cacheType == null || "".equals(cacheType)){
+					cacheType = "never";
 				}
 			} catch (Exception e) {
-				cache = "never";
+				cacheType = "never";
 				e.printStackTrace();
 			}
 		}
-		return cache;
+		return cacheType;
 	}
 
 	/**

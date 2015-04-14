@@ -156,11 +156,11 @@
     }
 }
 
-- (void)change_cache: (NSString *)_cache
+- (void)change_cacheType: (NSString *)_cache
 {
     if (_cache == nil || _cache.length <= 0)
     {
-        _cache = [model GetProperty:@"cache"].DefaultValue;
+        _cache = [model GetProperty:@"cacheType"].DefaultValue;
     }
     if (_cache != nil && _cache.length > 0)
     {

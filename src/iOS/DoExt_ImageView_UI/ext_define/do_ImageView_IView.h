@@ -24,6 +24,6 @@
 - (void)change_enabled: (NSString *)_enabled;
 - (void)change_source: (NSString *)_source;
 - (void)change_scale: (NSString *)_scale;
-- (void)change_cache: (NSString *)_cache;
+- (void)change_cacheType: (NSString *)_cache;
 
 @end

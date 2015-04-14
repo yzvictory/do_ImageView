@@ -28,7 +28,7 @@
     [self RegistProperty:[[doProperty alloc]init:@"enabled" :Bool :@"false" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"source" :String :@"" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"scale" :String :@"" :NO]];
-    [self RegistProperty:[[doProperty alloc]init:@"cache" :String :@"never" :NO]];
+    [self RegistProperty:[[doProperty alloc]init:@"cacheType" :String :@"never" :NO]];
 }
 
 @end

@@ -36,7 +36,7 @@
     self.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick)];
     [self addGestureRecognizer:tap];
-    self.cacheType = [model GetProperty:@"cache"].DefaultValue;
+    self.cacheType = [model GetProperty:@"cacheType"].DefaultValue;
 }
 //销毁所有的全局对象
 - (void) OnDispose

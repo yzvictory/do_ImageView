@@ -1,6 +1,6 @@
-package extimplement;
+package doext.implement;
 
-import extdefine.do_ImageView_MAbstract;
+import doext.define.do_ImageView_MAbstract;
 
 /**
  * 自定义扩展组件Model实现，继承Do_ImageView_MAbstract抽象类；

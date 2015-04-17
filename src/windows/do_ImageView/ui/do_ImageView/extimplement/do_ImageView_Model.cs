@@ -24,7 +24,7 @@ namespace do_ImageView.extimplement
             this.RegistProperty(new doProperty("source", PropertyDataType.String, "", false));
             this.RegistProperty(new doProperty("scale", PropertyDataType.String, "fillxy", false));
             this.RegistProperty(new doProperty("radius", PropertyDataType.Number, "0", false));
-            this.RegistProperty(new doProperty("cache", PropertyDataType.String, "always", false));
+            this.RegistProperty(new doProperty("cacheType", PropertyDataType.String, "always", false));
        
         }
         public override async Task<bool> InvokeAsyncMethod(string _methodName, doCore.Helper.JsonParse.doJsonNode _dictParas, doCore.Interface.doIScriptEngine _scriptEngine, string _callbackFuncName)

@@ -27,14 +27,14 @@ namespace do_ImageView.extimplement
     /// 参数解释：@_messageName字符串事件名称，@jsonResult传递事件参数对象；
     /// 获取doInvokeResult对象方式new doInvokeResult(model.UniqueKey);
     /// </summary>
-    public class image_View : UserControl, doIUIModuleView, do_ImageView_IMethod
+    public class do_ImageView_View : UserControl, doIUIModuleView, do_ImageView_IMethod
     {
         /// <summary>
         /// 每个UIview都会引用一个具体的model实例；
         /// </summary>
         private do_ImageView_MAbstract model;
         Border bor = new Border();
-        public  image_View()
+        public do_ImageView_View()
         {
             this.Content = bor;
         }
@@ -47,18 +47,20 @@ namespace do_ImageView.extimplement
             this.model = (do_ImageView_MAbstract)_doUIModule;
             this.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Left;
             this.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Top;
-            this.PointerPressed += image_View_PointerPressed;
-            this.PointerReleased += image_View_PointerReleased;
+            this.PointerPressed += do_ImageView_View_PointerPressed;
+            this.PointerReleased += do_ImageView_View_PointerReleased;
+            this.Width =Convert.ToDouble( this.model.GetPropertyValue("width"));
+            this.Height = Convert.ToDouble(this.model.GetPropertyValue("height"));
         }
 
-        void image_View_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        void do_ImageView_View_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             doInvokeResult _invokeResult = new doInvokeResult(this.model.UniqueKey);
             this.model.EventCenter.FireEvent("touchup", _invokeResult);
             this.model.EventCenter.FireEvent("touch", _invokeResult);
         }
 
-        void image_View_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        void do_ImageView_View_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             doInvokeResult _invokeResult = new doInvokeResult(this.model.UniqueKey);
             this.model.EventCenter.FireEvent("touchdown", _invokeResult);
@@ -95,33 +97,34 @@ namespace do_ImageView.extimplement
             {
                 if (_changedValues["enabled"] == "true")
                 {
-                    this.IsTapEnabled = true;
+                    this.IsEnabled = true;
                 }
                 else
                 {
-                    this.IsTapEnabled = false;
+                    this.IsEnabled = false;
                 }
             }
+          
             if (_changedValues.Keys.Contains("scale"))
             {
                 SetImageType(_changedValues["scale"]);
             }
             if (_changedValues.Keys.Contains("source"))
             {
-                string cachevalue = "";
-                if (!_changedValues.Keys.Contains("cache"))
+                string cacheTypevalue = "";
+                if (!_changedValues.Keys.Contains("cacheType"))
                 {
-                    cachevalue = model.GetProperty("cache").DefaultValue;
+                    cacheTypevalue = model.GetProperty("cacheType").DefaultValue;
                 }
                 else
                 {
-                    cachevalue = _changedValues["cache"];
+                    cacheTypevalue = _changedValues["cacheType"];
                 }
 
                 string source = _changedValues["source"];
                 if (doIOHelper.GetHttpUrlPath(source) != null)
                 {
-                    this.SetHttpImage(source, cachevalue);
+                    this.SetHttpImage(source, cacheTypevalue);
                 }
                 else
                 {
@@ -140,22 +143,26 @@ namespace do_ImageView.extimplement
                     }
                 }
             }
+            if (_changedValues.Keys.Contains("bgColor"))
+            {
+                (this.Content as Border).Background = doUIModuleHelper.GetColorFromString(_changedValues["bgColor"], new SolidColorBrush());
+            }
         }
-        private async void SetHttpImage(string path, string cache)
+        private async void SetHttpImage(string path, string cacheType)
         {
             string rootpath = "";
-            if (cache == "always")
+            if (cacheType == "always")
             {
                 //表示每次打开这个imageview都会先读缓存的本地图片，然后再读服务器的网络图片，然后再缓存到本地
                 rootpath = await doFileCacheHelper.getCachedFileAndRefresh(this.model.CurrentPage.CurrentApp, path);
                 setimage(rootpath);
             }
-            if (cache == "never")
+            if (cacheType == "never")
             {
                 //表示永远不读本地缓存，永远都是读远程图片
                 GetHttpImage(path);
             }
-            if (cache == "temporary")
+            if (cacheType == "temporary")
             {
                 //表示只读本地缓存，缓存没有的时候从远程读取一次然后就缓存到本地
                 rootpath = await doFileCacheHelper.getTempCachedFile(this.model.CurrentPage.CurrentApp, path);

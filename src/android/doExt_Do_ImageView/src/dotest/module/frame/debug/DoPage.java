@@ -11,13 +11,14 @@ import core.object.DoUIContainer;
 import core.object.DoUIModule;
 
 public class DoPage implements DoIPage {
-
+	
 	@Override
-	public DoMultitonModule createMultitonModule(String arg0) throws Exception {
+	public DoMultitonModule createMultitonModule(String arg0, String arg1)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public DoUIModule createUIModule(DoUIContainer arg0, DoJsonNode arg1)
 			throws Exception {

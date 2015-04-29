@@ -10,7 +10,8 @@ import core.object.DoMultitonModule;
 public class DoApp implements DoIApp{
 
 	@Override
-	public DoMultitonModule createMultitonModule(String arg0) throws Exception {
+	public DoMultitonModule createMultitonModule(String arg0, String arg1)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

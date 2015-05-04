@@ -69,7 +69,7 @@
     }
     if ([_radius intValue]< 0)
     {
-        NSInteger roundRadius = fabs([[doTextHelper Instance]StrToInt:_radius :0]);
+        float roundRadius = abs([[doTextHelper Instance]StrToInt:_radius :0]);
         
         CGPoint center = self.center;  //保存中点
         roundRadius = 2 * roundRadius * model.CurrentUIContainer.InnerXZoom;
@@ -96,11 +96,12 @@
 
 - (void)change_source: (NSString *)_source
 {
+    NSString* cache = [model GetPropertyValue:@"cacheType"];
     if (_source != nil && _source.length > 0)
     {
         if ([_source hasPrefix:@"http"])  //如果是由网络请求
         {
-            if ([self.cacheType isEqualToString:@"always"])
+            if ([cache isEqualToString:@"always"])
             {
                 UIImage *image = [self getImageFromCache:_source];
                 if(image)
@@ -108,7 +109,7 @@
                 else
                     [self getImageFromNetwork:_source cache:YES show:YES];
             }
-            else if ([self.cacheType isEqualToString:@"temporary"])
+            else if ([cache isEqualToString:@"temporary"])
             {
                 UIImage *image = [self getImageFromCache:_source];
                 if(image)
@@ -180,9 +181,11 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(_show)
                     self.image = img;
-                if(_cache)
-                    [self writeDataToCache:path];
             });
+            //写文件可以放在非UI线程
+            if(_cache)
+                [self writeDataToCache:path];
+
         }
     });
 }

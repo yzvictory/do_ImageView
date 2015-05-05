@@ -21,7 +21,7 @@
 #import "doIOHelper.h"
 #import "doIGlobal.h"
 #import <CommonCrypto/CommonDigest.h>
-
+static NSCache* dict;
 @implementation do_ImageView_UIView
 {
     BOOL isEnabled;
@@ -32,6 +32,11 @@
 - (void) LoadView: (doUIModule *) _doUIModule
 {
     model = (typeof(model)) _doUIModule;
+    if(dict==nil){
+        dict = [[NSCache alloc]init];
+        dict.countLimit = 50;
+        dict.totalCostLimit = 10*1024*1024;
+    }
     self.clipsToBounds = YES;
     self.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick)];
@@ -182,15 +187,16 @@
                 if(_show)
                     self.image = img;
             });
+            
             //写文件可以放在非UI线程
             if(_cache)
-                [self writeDataToCache:path];
+                [self writeDataToCache:path :dataImg: img];
 
         }
     });
 }
 
-- (void)writeDataToCache:(NSString *)path
+- (void)writeDataToCache:(NSString *)path :(NSData*) _data :(UIImage*) img
 {
     NSString *_dataRoot = [NSString stringWithFormat:@"%@/main/%@/data", [doServiceContainer Instance].Global.DataRootPath, @"app"];
     //不存在缓存文件夹，则创建缓存文件夹
@@ -199,13 +205,10 @@
     if (![[NSFileManager defaultManager] fileExistsAtPath:cachePath ])
         [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:nil];
     NSString *strName = [[doTextHelper Instance] MD5:path];
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@.png",cachePath,strName];
-    NSData *dataImg;
-    if (UIImagePNGRepresentation(self.image) == nil)
-        dataImg = UIImageJPEGRepresentation(self.image, 1);
-    else
-        dataImg = UIImagePNGRepresentation(self.image);
-    [[NSFileManager defaultManager] createFileAtPath:filePath contents:dataImg attributes:nil];
+    if(![dict objectForKey:strName] )
+        [dict setObject:img forKey:strName];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@.jpg",cachePath,strName];
+    [[NSFileManager defaultManager] createFileAtPath:filePath contents:_data attributes:nil];
 }
 
 - (UIImage *)getImageFromCache :(NSString *)path
@@ -213,12 +216,19 @@
     NSString *_dataRoot = [NSString stringWithFormat:@"%@/main/%@/data", [doServiceContainer Instance].Global.DataRootPath ,@"app"];
     NSString *cachePath = [NSString stringWithFormat:@"%@/sys/imagecache",_dataRoot];
     NSString *strName = [[doTextHelper Instance] MD5:path];
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@.png",cachePath,strName];
-    //在本地cache中找到图片
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-        return [UIImage imageWithContentsOfFile:filePath];
-    else
-        return nil;
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@.jpg",cachePath,strName];
+    if(![dict objectForKey:strName] ){
+        //在本地cache中找到图片
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+        {
+            UIImage* temp = [UIImage imageWithContentsOfFile:filePath];
+            [dict setObject:strName forKey:temp];
+            
+        }
+        else
+            return nil;
+    }
+    return [dict objectForKey:strName ];
 }
 
 #pragma mark - override UIView method

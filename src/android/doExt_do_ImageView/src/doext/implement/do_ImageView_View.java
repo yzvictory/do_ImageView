@@ -1,7 +1,7 @@
 package doext.implement;
 
 import java.util.Map;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -74,6 +74,7 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 		this.postInvalidate();
 	}
 
+	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		if(bgColorDrawable.getColor() == 0 && this.radius == 0f){
@@ -82,23 +83,23 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 			Bitmap bgBitmap = DoImageHandleHelper.drawableToBitmap(bgColorDrawable, getWidth(), getHeight());
 			Bitmap newBitmap = Bitmap.createBitmap(bgBitmap.getWidth(), bgBitmap.getHeight(), Bitmap.Config.ARGB_8888);
 			Canvas newCanvas = new Canvas(newBitmap);
-			newCanvas.drawBitmap(bgBitmap, 0, 0, new Paint());
+			newCanvas.drawBitmap(bgBitmap, 0, 0, null);
 			if (getDrawable() != null) {
 				Bitmap imageBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
 				if (imageBitmap != null) {
 					Bitmap scaledBitmap = getScaledBitmap(imageBitmap);
 					float left = Math.abs(bgBitmap.getWidth() - scaledBitmap.getWidth()) / 2;
 					float top = Math.abs(bgBitmap.getHeight() - scaledBitmap.getHeight()) / 2;
-					newCanvas.drawBitmap(scaledBitmap, left, top, new Paint());
+					newCanvas.drawBitmap(scaledBitmap, left, top, null);
 				}
 			}
 			newCanvas.save();
 			newCanvas.restore();
 			if (this.radius > 0f) {
-				canvas.drawBitmap(DoImageHandleHelper.createRoundBitmap(newBitmap, getRadius()), 0, 0, new Paint());
+				canvas.drawBitmap(DoImageHandleHelper.createRoundBitmap(newBitmap, getRadius()), 0, 0, null);
 				return;
 			}
-			canvas.drawBitmap(newBitmap, 0, 0, new Paint());
+			canvas.drawBitmap(newBitmap, 0, 0, null);
 		}
 	}
 
@@ -194,17 +195,18 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 			String source = _changedValues.get("source");
 			try {
 				if (null != DoIOHelper.getHttpUrlPath(source)) {
-					DoImageLoadHelper.getInstance().loadURL(source, cache, new OnPostExecuteListener() {
-						@Override
-						public void onResultExecute(Bitmap bitmap) {
-							if(bitmap !=null) {
-								setImageBitmap(bitmap);
+					DoImageLoadHelper.getInstance().loadURL(source, cache, getWidth(), getHeight(),
+						new OnPostExecuteListener() {
+							@Override
+							public void onResultExecute(Bitmap bitmap) {
+								if (bitmap != null) {
+									setImageBitmap(bitmap);
+								}
 							}
-						}
-					});
+						});
 				} else {
 					String path = DoIOHelper.getLocalFileFullPath(this.model.getCurrentPage().getCurrentApp(), source);
-					Bitmap bitmap = DoImageLoadHelper.getInstance().loadLocal(path);
+					Bitmap bitmap = DoImageLoadHelper.getInstance().loadLocal(path, getWidth(), getHeight());
 					if(bitmap != null){
 						setImageBitmap(bitmap);
 					}

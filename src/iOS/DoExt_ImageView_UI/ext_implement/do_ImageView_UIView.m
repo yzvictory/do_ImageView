@@ -21,10 +21,11 @@
 #import "doIOHelper.h"
 #import "doIGlobal.h"
 #import <CommonCrypto/CommonDigest.h>
-
+static NSCache* dict;
 @implementation do_ImageView_UIView
 {
     BOOL isEnabled;
+    UIImage* defaultImage;
 }
 
 #pragma mark - doIUIModuleView协议方法（必须）
@@ -32,6 +33,11 @@
 - (void) LoadView: (doUIModule *) _doUIModule
 {
     model = (typeof(model)) _doUIModule;
+    if(dict==nil){
+        dict = [[NSCache alloc]init];
+        dict.countLimit = 50;
+        dict.totalCostLimit = 10*1024*1024;
+    }
     self.clipsToBounds = YES;
     self.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick)];
@@ -41,7 +47,7 @@
 //销毁所有的全局对象
 - (void) OnDispose
 {
-    
+    defaultImage = nil;
 }
 //实现布局
 - (void) OnRedraw
@@ -69,7 +75,7 @@
     }
     if ([_radius intValue]< 0)
     {
-        NSInteger roundRadius = fabs([[doTextHelper Instance]StrToInt:_radius :0]);
+        float roundRadius = abs([[doTextHelper Instance]StrToInt:_radius :0]);
         
         CGPoint center = self.center;  //保存中点
         roundRadius = 2 * roundRadius * model.CurrentUIContainer.InnerXZoom;
@@ -93,31 +99,44 @@
         defule = NO;
     isEnabled = [[doTextHelper Instance] StrToBool:_enabled :defule];
 }
-
+- (void)change_defaultImage: (NSString *)_source
+{
+    NSString * imgPath = [doIOHelper GetLocalFileFullPath:model.CurrentPage.CurrentApp :_source];
+    UIImage * img = [UIImage imageWithContentsOfFile:imgPath];
+    
+    if (img != nil) {
+        defaultImage = img;
+    }
+}
 - (void)change_source: (NSString *)_source
 {
+    NSString* cache = [model GetPropertyValue:@"cacheType"];
     if (_source != nil && _source.length > 0)
     {
         if ([_source hasPrefix:@"http"])  //如果是由网络请求
         {
-            if ([self.cacheType isEqualToString:@"always"])
+            if ([cache isEqualToString:@"always"])
             {
                 UIImage *image = [self getImageFromCache:_source];
                 if(image)
                     self.image = image;
-                else
+                else{
+                    [self clearImage];
                     [self getImageFromNetwork:_source cache:YES show:YES];
+                }
             }
-            else if ([self.cacheType isEqualToString:@"temporary"])
+            else if ([cache isEqualToString:@"temporary"])
             {
                 UIImage *image = [self getImageFromCache:_source];
                 if(image)
                     self.image = image;
                 else
-                    [self getImageFromNetwork:_source cache:YES show:NO];
+                    [self clearImage];
+                [self getImageFromNetwork:_source cache:YES show:YES];
             }
             else
             {
+                [self clearImage];
                 [self getImageFromNetwork:_source cache:NO show:YES];
             }
         }
@@ -170,6 +189,13 @@
 
 #pragma mark -
 #pragma mark - private
+- (void) clearImage
+{
+    if(defaultImage!=nil)
+        self.image = defaultImage;
+    else
+        self.image = nil;
+}
 - (void)getImageFromNetwork :(NSString *)path cache:(BOOL)_cache show:(BOOL)_show
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -180,14 +206,17 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(_show)
                     self.image = img;
-                if(_cache)
-                    [self writeDataToCache:path];
             });
+            
+            //写文件可以放在非UI线程
+            if(_cache)
+                [self writeDataToCache:path :dataImg: img];
+
         }
     });
 }
 
-- (void)writeDataToCache:(NSString *)path
+- (void)writeDataToCache:(NSString *)path :(NSData*) _data :(UIImage*) img
 {
     NSString *_dataRoot = [NSString stringWithFormat:@"%@/main/%@/data", [doServiceContainer Instance].Global.DataRootPath, @"app"];
     //不存在缓存文件夹，则创建缓存文件夹
@@ -196,13 +225,10 @@
     if (![[NSFileManager defaultManager] fileExistsAtPath:cachePath ])
         [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:nil];
     NSString *strName = [[doTextHelper Instance] MD5:path];
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@.png",cachePath,strName];
-    NSData *dataImg;
-    if (UIImagePNGRepresentation(self.image) == nil)
-        dataImg = UIImageJPEGRepresentation(self.image, 1);
-    else
-        dataImg = UIImagePNGRepresentation(self.image);
-    [[NSFileManager defaultManager] createFileAtPath:filePath contents:dataImg attributes:nil];
+    if(![dict objectForKey:strName] )
+        [dict setObject:img forKey:strName];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@.jpg",cachePath,strName];
+    [[NSFileManager defaultManager] createFileAtPath:filePath contents:_data attributes:nil];
 }
 
 - (UIImage *)getImageFromCache :(NSString *)path
@@ -210,12 +236,19 @@
     NSString *_dataRoot = [NSString stringWithFormat:@"%@/main/%@/data", [doServiceContainer Instance].Global.DataRootPath ,@"app"];
     NSString *cachePath = [NSString stringWithFormat:@"%@/sys/imagecache",_dataRoot];
     NSString *strName = [[doTextHelper Instance] MD5:path];
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@.png",cachePath,strName];
-    //在本地cache中找到图片
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-        return [UIImage imageWithContentsOfFile:filePath];
-    else
-        return nil;
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@.jpg",cachePath,strName];
+    if(![dict objectForKey:strName] ){
+        //在本地cache中找到图片
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+        {
+            UIImage* temp = [UIImage imageWithContentsOfFile:filePath];
+            [dict setObject:strName forKey:temp];
+            
+        }
+        else
+            return nil;
+    }
+    return [dict objectForKey:strName ];
 }
 
 #pragma mark - override UIView method

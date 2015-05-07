@@ -25,6 +25,7 @@ static NSCache* dict;
 @implementation do_ImageView_UIView
 {
     BOOL isEnabled;
+    UIImage* defaultImage;
 }
 
 #pragma mark - doIUIModuleView协议方法（必须）
@@ -46,7 +47,7 @@ static NSCache* dict;
 //销毁所有的全局对象
 - (void) OnDispose
 {
-    
+    defaultImage = nil;
 }
 //实现布局
 - (void) OnRedraw
@@ -98,7 +99,15 @@ static NSCache* dict;
         defule = NO;
     isEnabled = [[doTextHelper Instance] StrToBool:_enabled :defule];
 }
-
+- (void)change_defaultImage: (NSString *)_source
+{
+    NSString * imgPath = [doIOHelper GetLocalFileFullPath:model.CurrentPage.CurrentApp :_source];
+    UIImage * img = [UIImage imageWithContentsOfFile:imgPath];
+    
+    if (img != nil) {
+        defaultImage = img;
+    }
+}
 - (void)change_source: (NSString *)_source
 {
     NSString* cache = [model GetPropertyValue:@"cacheType"];
@@ -111,8 +120,10 @@ static NSCache* dict;
                 UIImage *image = [self getImageFromCache:_source];
                 if(image)
                     self.image = image;
-                else
+                else{
+                    [self clearImage];
                     [self getImageFromNetwork:_source cache:YES show:YES];
+                }
             }
             else if ([cache isEqualToString:@"temporary"])
             {
@@ -120,10 +131,12 @@ static NSCache* dict;
                 if(image)
                     self.image = image;
                 else
-                    [self getImageFromNetwork:_source cache:YES show:NO];
+                    [self clearImage];
+                [self getImageFromNetwork:_source cache:YES show:YES];
             }
             else
             {
+                [self clearImage];
                 [self getImageFromNetwork:_source cache:NO show:YES];
             }
         }
@@ -176,6 +189,13 @@ static NSCache* dict;
 
 #pragma mark -
 #pragma mark - private
+- (void) clearImage
+{
+    if(defaultImage!=nil)
+        self.image = defaultImage;
+    else
+        self.image = nil;
+}
 - (void)getImageFromNetwork :(NSString *)path cache:(BOOL)_cache show:(BOOL)_show
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

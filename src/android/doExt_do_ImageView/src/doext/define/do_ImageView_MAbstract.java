@@ -23,5 +23,6 @@ public abstract class do_ImageView_MAbstract extends DoUIModule{
 		this.registProperty(new DoProperty("radius", PropertyDataType.Number, "0", true));
 		this.registProperty(new DoProperty("scale", PropertyDataType.String, "fillxy", true));
 		this.registProperty(new DoProperty("source", PropertyDataType.String, "", false));
+		this.registProperty(new DoProperty("defaultImage",PropertyDataType.String, "", true));
 	}
 }

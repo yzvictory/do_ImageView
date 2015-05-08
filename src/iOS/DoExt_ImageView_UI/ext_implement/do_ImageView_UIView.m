@@ -259,12 +259,12 @@ static NSCache* dict;
 }
 
 #pragma mark - doIUIModuleView协议方法（必须）<大部分情况不需修改>
-- (BOOL)InvokeSyncMethod:(NSString *)_methodName :(doJsonNode *)_dicParas :(id<doIScriptEngine>)_scriptEngine :(doInvokeResult *)_invokeResult
+- (BOOL)InvokeSyncMethod:(NSString *)_methodName :(NSDictionary *)_dicParas :(id<doIScriptEngine>)_scriptEngine :(doInvokeResult *)_invokeResult
 {
     return [doScriptEngineHelper InvokeSyncSelector:self :_methodName :_dicParas :_scriptEngine :_invokeResult];
 }
 
-- (BOOL)InvokeAsyncMethod:(NSString *)_methodName :(doJsonNode *)_dicParas :(id<doIScriptEngine>)_scriptEngine :(NSString *)_callbackFuncName
+- (BOOL)InvokeAsyncMethod:(NSString *)_methodName :(NSDictionary *)_dicParas :(id<doIScriptEngine>)_scriptEngine :(NSString *)_callbackFuncName
 {
     return [doScriptEngineHelper InvokeASyncSelector:self :_methodName :_dicParas :_scriptEngine :_callbackFuncName];
 }

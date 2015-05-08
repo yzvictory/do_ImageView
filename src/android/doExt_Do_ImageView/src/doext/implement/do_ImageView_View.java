@@ -1,6 +1,7 @@
 package doext.implement;
 
 import java.util.Map;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -74,7 +75,7 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 		this.postInvalidate();
 	}
 
-	@SuppressLint("DrawAllocation")
+	@SuppressLint({ "NewApi", "DrawAllocation" })
 	@Override
 	protected void onDraw(Canvas canvas) {
 		if(bgColorDrawable.getColor() == 0 && this.radius == 0f){
@@ -190,10 +191,16 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 				this.setScaleType(ScaleType.FIT_XY);
 			}
 		}
-		if (_changedValues.containsKey("source")) {
-			String cache = getCacheValue(_changedValues);
-			String source = _changedValues.get("source");
+		if (_changedValues.containsKey("source") || _changedValues.containsKey("defaultImage")) {
 			try {
+				String cache = getCacheValue(_changedValues);
+				String defaultImage = _changedValues.get("defaultImage");
+				String source = _changedValues.get("source");
+				if(null == defaultImage || "".equals(defaultImage)){
+					setImageBitmap(null);
+				}else{
+					setLocalImage(defaultImage);
+				}
 				if (null != DoIOHelper.getHttpUrlPath(source)) {
 					DoImageLoadHelper.getInstance().loadURL(source, cache, getWidth(), getHeight(),
 						new OnPostExecuteListener() {
@@ -205,15 +212,19 @@ public class do_ImageView_View extends ImageView implements DoIUIModuleView, do_
 							}
 						});
 				} else {
-					String path = DoIOHelper.getLocalFileFullPath(this.model.getCurrentPage().getCurrentApp(), source);
-					Bitmap bitmap = DoImageLoadHelper.getInstance().loadLocal(path, getWidth(), getHeight());
-					if(bitmap != null){
-						setImageBitmap(bitmap);
-					}
+					setLocalImage(source);
 				}
 			} catch (Exception e) {
 				DoServiceContainer.getLogEngine().writeError("do_ImageView_View", e);
 			}
+		}
+	}
+	
+	private void setLocalImage(String source) throws Exception{
+		String path = DoIOHelper.getLocalFileFullPath(this.model.getCurrentPage().getCurrentApp(), source);
+		Bitmap bitmap = DoImageLoadHelper.getInstance().loadLocal(path, getWidth(), getHeight());
+		if(bitmap != null){
+			setImageBitmap(bitmap);
 		}
 	}
 	
